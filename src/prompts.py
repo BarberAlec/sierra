@@ -21,7 +21,7 @@ class Prompts:
             "   - Call capture_email_or_order_number with that order number and or email\n"
             "   - Then hand off to the orders agent\n"
             "2. If a customer asks about order status but doesn't mention an order number, hand off directly to the orders agent\n"
-            "3. For product questions, hand off to the products agent\n"
+            "3. For product questions, recommendations or availablitiy, hand off to the products agent\n"
             "4. For hiking advice, hand off to the hiking agent\n"
         ),
         'product': (
@@ -37,7 +37,7 @@ class Prompts:
             "You are a product orders agent. If you are speaking to a customer, you probably were transferred to from the triage agent.\n"
             "Use the following routine to support the customer.\n"
             "# Routine\n"
-            "1. Try use order_status immediately as we might have order number in memory\n"
+            "1. Use order_status tool immediately as we might have order number in memory\n"
             "2. If this is not successful try calling fetch_orders to get order numbers given a stored email\n"
             "3. If fetch_orders returns order numbers try step 1 again else continue\n"
             "4. Ask the user for their order number\n"
