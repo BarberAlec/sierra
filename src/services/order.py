@@ -1,21 +1,20 @@
 import json
 import logging
 from collections import defaultdict
+from src.services.singleton import Singleton
 from src.services.product import Product
 
 
 ORDER_PATH = "src/data/orders.json"
 
 
-class Order:
+class Order(Singleton):
     """
     A singleton class to manage and query order data.
 
     The `Order` class reads order data from a JSON file and provides methods
     to retrieve order statuses and order numbers by email.
     """
-    _instance = None
-    
     EMAIL_KEY = "Email"
     ORDER_NUM_KEY = "OrderNumber"
     PRODUCTS_LIST_KEY = "ProductsOrdered"
@@ -23,14 +22,8 @@ class Order:
     NAME_KEY = "CustomerName"
     STATUS_KEY = "Status"
     
-    def __new__(cls, *args, **kwargs):
-        if cls._instance is None:
-            cls._instance = super().__new__(cls)
-        return cls._instance
-    
-    def __init__(self):
+    def _initialize(self):
         self.product_helper = Product()
-        self.logger = logging.getLogger(__name__)
         
         with open(ORDER_PATH, "r") as f:
             self.product_data = json.load(f)

@@ -6,6 +6,8 @@ from src.services.product import Product
 
 class TestOrder(unittest.TestCase):
     def setUp(self):
+        Product._reset()
+        
         self.mock_products = [
             {"ProductName": "Bhavish's Backcountry Blaze Backpack", "SKU": "SOBP001", "Inventory": 120, "Description": "Conquer the wilderness!", "Tags": ["Backpack", "Hiking", "Adventure", "Outdoor Gear"]},
             {"ProductName": "Dorothy's Wizarding Red Shoes", "SKU": "SOSV009", "Inventory": 50, "Description": "Click your heels to teleport!", "Tags": ["Fashion", "Lifestyle", "Teleportation", "Transport"]},
