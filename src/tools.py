@@ -7,8 +7,16 @@ from src.services.order import Order
 
 class SierraOutfittersAgentContext(BaseModel):
     email: str | None = None
-    name: str | None = None
-    order_numbers: list[str] | None = None
+    order_number: str | None = None
+
+
+# Triage tools
+@function_tool
+def capture_email_or_order_number(context: RunContextWrapper[SierraOutfittersAgentContext], email: str = None, order_number: str = None) -> None:
+    if email is not None:
+        context.context.email = email
+    if order_number is not None:
+        context.context.order_number = order_number
 
 
 # Products Tools
@@ -31,14 +39,31 @@ def products_availablity(context: RunContextWrapper[SierraOutfittersAgentContext
 
 # Orders tools
 @function_tool
-def fetch_orders(context: RunContextWrapper[SierraOutfittersAgentContext], email: str):
+def fetch_orders(context: RunContextWrapper[SierraOutfittersAgentContext], email: str = None) -> str:
+    """Fetch order numbers for a given email, if none provided we will use stored context to see if we have an email for this user.
+    If we do not you will have to call this tool again with an email.
+
+    Args:
+        context (RunContextWrapper[SierraOutfittersAgentContext]): Context wrapper
+        email (str, optional): email address to search order numbers against. Defaults to None.
+
+    Returns:
+        str: an order number for this email
+    """
     order_helper = Order()
-    context.context.order_numbers = order_helper.order_numbers(email)
+    email = email or context.context.email
     context.context.email = email
-    return context.context.order_numbers
+
+    order_numbers = order_helper.order_numbers(email)
+    if order_numbers:
+        context.context.order_number = order_numbers[0]
+    return order_numbers
 
 
 @function_tool
-def order_status(context: RunContextWrapper[SierraOutfittersAgentContext], order_number: str):
+def order_status(context: RunContextWrapper[SierraOutfittersAgentContext], order_number: str = None):
     order_helper = Order()
+    order_number = order_number or context.context.order_number
+    context.context.order_number = order_number
+
     return order_helper.order_status(order_number)
