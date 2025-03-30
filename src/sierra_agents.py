@@ -1,6 +1,13 @@
 from agents import Agent, WebSearchTool
 
-from src.tools import fetch_orders, order_status, products_availablity, product_descriptions, SierraOutfittersAgentContext
+from src.tools import (
+    fetch_orders,
+    order_status,
+    products_availablity,
+    product_descriptions,
+    capture_email_or_order_number,
+    SierraOutfittersAgentContext
+    )
 from src.prompts import Prompts
 
 
@@ -40,6 +47,7 @@ triage_agent = Agent[SierraOutfittersAgentContext](
     model=MODEL,
     handoff_description=triage_prompt.handoff(),
     instructions=triage_prompt.prompt(),
+    tools=[capture_email_or_order_number],
     handoffs=[
         orders_agent,
         products_agent,
