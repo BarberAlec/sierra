@@ -2,10 +2,14 @@ import unittest
 from unittest.mock import patch, mock_open, MagicMock
 import json
 from src.services.order import Order
+from src.services.product import Product
 
 
 class TestOrder(unittest.TestCase):
     def setUp(self):
+        Order._reset()
+        Product._reset()
+        
         self.mock_products = [
             {"Email": "test@example.com", "OrderNumber": "1001", "Status": "Shipped", "ProductsOrdered": [], "CustomerName": "Bob", "TrackingNumber": "1234"},
             {"Email": "test@example.com", "OrderNumber": "1002", "Status": "Processing", "ProductsOrdered": [], "CustomerName": "Mary", "TrackingNumber": "5555"},

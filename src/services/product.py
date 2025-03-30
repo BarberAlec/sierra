@@ -1,33 +1,25 @@
 import json
 import logging
+from src.services.singleton import Singleton
 
 
 PRODUCT_PATH = "src/data/products.json"
 
 
-class Product:
+class Product(Singleton):
     """
     A singleton class to manage and query product data.
     
     The `Product` class reads product data from a JSON file and provides methods
     to show availablity and descriptions.
     """
-    _instance = None
-
     SKU_KEY = "SKU"
     NAME_KEY = "ProductName"
     INVENTORY_KEY = "Inventory"
     DESCRIPTION_KEY = "Description"
     TAGS_KEY = "Tags"
     
-    def __new__(cls, *args, **kwargs):
-        if cls._instance is None:
-            cls._instance = super().__new__(cls)
-        return cls._instance
-    
-    def __init__(self):
-        self.logger = logging.getLogger(__name__)
-        
+    def _initialize(self):
         with open(PRODUCT_PATH, "r") as f:
             self.product_data = json.load(f)
         
