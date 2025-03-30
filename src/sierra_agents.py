@@ -1,3 +1,4 @@
+import logging
 from agents import Agent, WebSearchTool
 
 from src.tools import (
@@ -10,11 +11,14 @@ from src.tools import (
     )
 from src.prompts import Prompts
 
+logger = logging.getLogger(__name__)
+
 
 MODEL = "gpt-4o-mini"
 
 
 order_prompt = Prompts('order')
+logger.info("Initializing Product Orders Agent")
 orders_agent = Agent[SierraOutfittersAgentContext](
     model=MODEL,
     name="Product Orders Agent",
@@ -24,6 +28,7 @@ orders_agent = Agent[SierraOutfittersAgentContext](
 )
 
 product_prompt = Prompts('product')
+logger.info("Initializing Product Information Agent")
 products_agent = Agent[SierraOutfittersAgentContext](
     model=MODEL,
     name="Product Information Agent",
@@ -33,6 +38,7 @@ products_agent = Agent[SierraOutfittersAgentContext](
 )
 
 hiking_prompt = Prompts('hiking')
+logger.info("Initializing Hiking Questions and Advice Agent")
 hiking_agent = Agent[SierraOutfittersAgentContext](
     model=MODEL,
     name="Hiking Questions and Advice Agent",
@@ -42,6 +48,7 @@ hiking_agent = Agent[SierraOutfittersAgentContext](
 )
 
 triage_prompt = Prompts('triage')
+logger.info("Initializing Triage Agent")
 triage_agent = Agent[SierraOutfittersAgentContext](
     name="Triage Agent",
     model=MODEL,
@@ -54,6 +61,7 @@ triage_agent = Agent[SierraOutfittersAgentContext](
         hiking_agent
     ],
 )
+logger.info("Setting up handoff relationships")
 orders_agent.handoffs.append(triage_agent)
 products_agent.handoffs.append(triage_agent)
 hiking_agent.handoffs.append(triage_agent)
