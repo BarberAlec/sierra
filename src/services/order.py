@@ -35,8 +35,6 @@ class Order(Singleton):
         self.logger.info(f"Loaded {len(self.product_data)} orders")
     
     def order_status(self, order_number: str):
-        # TODO: return tracking number as a link!!!!!
-
         self.logger.info(f"Fetching status for order: {order_number}")
 
         # allow for malformed order numbers
