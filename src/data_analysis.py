@@ -1,4 +1,4 @@
-# unrealated file for investigating data, not part of main flow
+# IGNORE! unrealated file for investigating data, not part of main flow
 import json
 
 
@@ -31,7 +31,6 @@ def main():
         counter[order["Email"]].append(order["OrderNumber"])
     for k, v in counter.items():
         print(f"{k}: {v}\n")
-    # one email for order number in data, cant rely on this...
     
     tags = set()
     for prd in products_data:
@@ -39,6 +38,7 @@ def main():
     print(tags)
     # {'Safety-Enhanced', 'Lifestyle', 'Explorer', 'Winter', 'High-Tech', 'Outdoor Gear', 'Backpack', 'Fashion', 'Weatherproof', 'Adventure-Ready', 'Adventure', 'Skis', 'Hiking', 'Comfort', 'Discretion', 'Advanced Cloaking', 'Versatile', 'Personal Flight', 'Teleportation', 'Snow', 'Stealth', 'Transport', 'Outdoors', 'Trail', 'Trailblazing', 'Rugged Design', 'Water Sports', 'Food & Beverage'}
     # likely not comprehensive, dont over index on this.
-    
+
+
 if __name__ == "__main__":
     main()
