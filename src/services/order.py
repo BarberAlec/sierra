@@ -34,16 +34,23 @@ class Order(Singleton):
             self.orders[order[self.ORDER_NUM_KEY]] = order
         self.logger.info(f"Loaded {len(self.product_data)} orders")
     
-    def order_status(self, order_number: str):
-        self.logger.info(f"Fetching status for order: {order_number}")
+    def order_status(self, order_number: str, email: str):
+        self.logger.info(f"Fetching status for order: {order_number} and email {email}")
+
+        if order_number is None or email is None:
+            return "Must provide an email address and order number"
+        elif order_number is None:
+            return f"Must provide an order number, current email is {email}"
+        elif email is None:
+            return f"Must provide an email address, current order number is {order_number}"
 
         # allow for malformed order numbers
         order_number = f"#{order_number}" if order_number[0] != "#" else order_number
 
         if order_number not in self.orders:
             self.logger.warning(f"Order not found: {order_number}")
-            return f"Could not find an order with order number: {order_number}."
-        
+            return f"Could not find an order with order number: {order_number} and email {email}."
+
         order = self.orders[order_number]
         product_details = self._product_details(order)
         customer_name = order[self.NAME_KEY]
@@ -51,6 +58,10 @@ class Order(Singleton):
         status = order[self.STATUS_KEY]
         tracking_number = order[self.TRACKING_KEY]
         tracking_link = None if tracking_number is None else self._tracking_link(tracking_number)
+
+        if customer_email != email:
+            self.logger.warning(f"Order found for {order_number} but wrong email {customer_email} (should be {email})")
+            return f"Could not find an order with order number: {order_number} and email {email}."
         
         self.logger.info(f"Retrieved order {order_number} with status: {status}")
         return f"Order {order_number} for {customer_name} ({customer_email})\nStatus: {status}\nTracking Link: {tracking_link}\n{product_details}"

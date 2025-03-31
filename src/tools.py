@@ -78,12 +78,13 @@ def fetch_orders(context: RunContextWrapper[SierraOutfittersAgentContext], email
 
 
 @function_tool
-def order_status(context: RunContextWrapper[SierraOutfittersAgentContext], order_number: str = None):
-    """Get the status of an order by its order number.
+def order_status(context: RunContextWrapper[SierraOutfittersAgentContext], order_number: str = None, email: str = None):
+    """Get the status of an order by its order number and email.
     
     Args:
         context (RunContextWrapper[SierraOutfittersAgentContext]): Context wrapper
         order_number (str, optional): Order number to look up. If None, will use context. Defaults to None.
+        email (str, optional): Email to lookup. If None, will use context. Defaults to None.
         
     Returns:
         str: Status and details of the order
@@ -92,10 +93,14 @@ def order_status(context: RunContextWrapper[SierraOutfittersAgentContext], order
     
     if order_number is None and context.context.order_number is None:
         logger.warning("No order number provided and none in context")
+    if email is None and context.context.email is None:
+        logger.warning("No email provided and none in context")
     
     order_helper = Order()
     order_number = order_number or context.context.order_number
+    email = email or context.context.email
     context.context.order_number = order_number
-    logger.info(f"Looking up status for order: {order_number}")
+    context.context.email = email
+    logger.info(f"Looking up status for order: {order_number} and email: {email}")
 
-    return order_helper.order_status(order_number)
+    return order_helper.order_status(order_number, email)
