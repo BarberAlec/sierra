@@ -1,5 +1,4 @@
 import json
-import logging
 from collections import defaultdict
 from src.services.singleton import Singleton
 from src.services.product import Product
@@ -36,25 +35,35 @@ class Order(Singleton):
         self.logger.info(f"Loaded {len(self.product_data)} orders")
     
     def order_status(self, order_number: str):
+        # TODO: return tracking number as a link!!!!!
+
         self.logger.info(f"Fetching status for order: {order_number}")
+
+        # allow for malformed order numbers
         order_number = f"#{order_number}" if order_number[0] != "#" else order_number
+
         if order_number not in self.orders:
             self.logger.warning(f"Order not found: {order_number}")
             return f"Could not find an order with order number: {order_number}."
         
         order = self.orders[order_number]
-        product_details = [self._product_details(sku) for sku in order[self.PRODUCTS_LIST_KEY]]
-        product_details = "\n".join(product_details)
+        product_details = self._product_details(order)
         customer_name = order[self.NAME_KEY]
         customer_email = order[self.EMAIL_KEY]
         status = order[self.STATUS_KEY]
-        tracking_number = order[self.TRACKING_KEY] or "N/A"
+        tracking_number = order[self.TRACKING_KEY]
+        tracking_link = None if tracking_number is None else self._tracking_link(tracking_number)
         
         self.logger.info(f"Retrieved order {order_number} with status: {status}")
-        return f"Order {order_number} for {customer_name} ({customer_email})\nStatus: {status}\nTracking number: {tracking_number}\n{product_details}"
+        return f"Order {order_number} for {customer_name} ({customer_email})\nStatus: {status}\nTracking Link: {tracking_link}\n{product_details}"
     
-    def _product_details(self, sku) -> str:
-        return self.product_helper.product_details(sku)
+    def _product_details(self, order) -> str:
+        product_details = [self.product_helper.product_details(sku) for sku in order[self.PRODUCTS_LIST_KEY]]
+
+        return "\n".join(product_details)
+    
+    def _tracking_link(self, tracking_number):
+        return f"https://tools.usps.com/go/TrackConfirmAction?tLabels={tracking_number}"
         
     def order_numbers(self, email: str):
         self.logger.info(f"Looking up order numbers for email: {email}")

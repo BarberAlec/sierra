@@ -37,7 +37,7 @@ class TestOrder(unittest.TestCase):
                 "#1003": self.mock_products[2]
             }
             
-            res = "Order #1001 for Bob (test@example.com)\nStatus: Shipped\nTracking number: 1234\n"
+            res = "Order #1001 for Bob (test@example.com)\nStatus: Shipped\nTracking Link: https://tools.usps.com/go/TrackConfirmAction?tLabels=1234\n"
             self.assertEqual(order.order_status("1001"), res)
             
             not_found_msg = "Could not find an order with order number: #9999."
