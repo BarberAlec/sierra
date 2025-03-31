@@ -38,10 +38,10 @@ class TestOrder(unittest.TestCase):
             }
             
             res = "Order #1001 for Bob (test@example.com)\nStatus: Shipped\nTracking Link: https://tools.usps.com/go/TrackConfirmAction?tLabels=1234\n"
-            self.assertEqual(order.order_status("1001"), res)
+            self.assertEqual(order.order_status("1001", "test@example.com"), res)
             
-            not_found_msg = "Could not find an order with order number: #9999."
-            self.assertEqual(order.order_status("9999"), not_found_msg)
+            not_found_msg = "Could not find an order with order number: #9999 and email something."
+            self.assertEqual(order.order_status("9999", "something"), not_found_msg)
     
     @patch('src.services.order.open', new_callable=mock_open)
     @patch('src.services.product.open', new_callable=mock_open)
